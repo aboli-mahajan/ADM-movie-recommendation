@@ -12,15 +12,26 @@ account and notify you of the movies that your friends have liked! Hurray!!
 ************************************************************************************************************************
 CHANGES
 ************************************************************************************************************************
+
+version 0.3
+Beta Release
+- Devised a Map-Reduce code to find average ratings of movies belonging to a set of input genres.
+- Evaluated a user's commonly reviewed movie genres. Used the most frequent genres as an input to the Map-Reduce function to find matching movies.
+- Added the option to run the recommendation system in a loop.
+- Further added a utility package for common code.
+- Limited the results to the top 20 records based on highest average rating in each case.
+- To do: error handling
+
+
 version 0.2
-- alpha release
-- complete a first pass implementation of the primary use case 
-- implementation of recommendation functions based on rating and release year through user input
-- modularized the code that handles database calls and read write to database in a different class. Business logic is included in RecommendMovies.java. The main class i.e "MoviesMain.java" is responsible for calling the function of different classes
+Alpha Release
+- Completed a first pass implementation of the primary use case.
+- Implemented recommendation functions based on the rating and the release year of the movies through user input.
+- Modularized the code that handles database connectivity and read-write calls into a different class. Business logic is included in RecommendMovies.java. The main class i.e "MoviesMain.java" is responsible for calling the functions of different classes.
 
 
 version 0.1
-- proof of architecture
+Proof of Architecture
 
 
 ************************************************************************************************************************
@@ -41,3 +52,11 @@ OTHER NOTES
 ************************************************************************************************************************
 
 1. The database has a slight modification. We have added columns for username and email address and fixed columns that had incomplete values.
+
+2. You may try one of the email addresses - "Edwin.Frankel@gmail.com", "Crissy.Siemens@gmail.com" and "Kay.Kriner@gmail.com" for testing menu case 4.
+
+R&D aspects
+- Developed a genre similarity and rating distance based algorithm for recommendation.
+- Wrote a test code to create a matrix of all movies and the genres they belong to.
+- Deferred using this matrix until the next release for finding similarities between the movies viewed by a user and the ones from the database.
+
