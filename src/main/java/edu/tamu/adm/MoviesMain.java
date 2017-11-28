@@ -12,16 +12,13 @@ public class MoviesMain {
 		DBConnect dbDataLoad = new DBConnect();
 		MongoDatabase db = dbDataLoad.createDBConnection();
 		@SuppressWarnings("rawtypes")
-		//Movie collection is loaded in a variable 
-		MongoCollection collection = dbDataLoad.getCollectionOfDatabase(db);
-		//Data is loaded into the database
+		MongoCollection collection = dbDataLoad.getCollectionOfDatabase(db, "movies");
+		//Load Data 
 		dbDataLoad.WriteIntoMongo(collection);
-		//Data is read from the database
+		//Read Data
 		dbDataLoad.ReadFromMongo(collection);
-		//Show top movie recommendations
 		RecommendMovies recommendMovies = new RecommendMovies();
-		recommendMovies.getInputs(collection);
-	
+		recommendMovies.getInputs(collection);	
 	}
 	
 }

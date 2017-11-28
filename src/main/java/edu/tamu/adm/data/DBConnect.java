@@ -19,23 +19,26 @@ public class DBConnect {
 	private static final String MOVIES_DB = "moviesDB";
 	private static final String MOVIES = "movies";
 	private static final String SAMPLE_MOVIES_CSV = "data/movies_data.csv";
-	MongoClient mongoClient;
-	MongoDatabase database;
+	MongoClient mongoClient = null;
+	MongoDatabase database = null;
 	MongoCollection<Document> collection;
 
 	// Connecting to MongoDB
 	public MongoDatabase createDBConnection() {
-		System.out.println("\nAttempting to connect to the mongodb server.\n");
-		mongoClient = new MongoClient("localhost", 27017);
-		this.database = mongoClient.getDatabase(MOVIES_DB);
-		System.out.println("\nConnection established.\n");
-		return database;
+		if(this.mongoClient == null) {
+			System.out.println("\nAttempting to connect to the mongodb server.\n");
+			this.mongoClient = new MongoClient("localhost", 27017);
+		}
+		if(this.database == null) {
+			this.database = mongoClient.getDatabase(MOVIES_DB);
+			System.out.println("\nConnection established.\n");
+		}
+		return this.database;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public MongoCollection getCollectionOfDatabase(MongoDatabase database) {
-		database = mongoClient.getDatabase(MOVIES_DB);
-		this.collection = database.getCollection(MOVIES);
+	public MongoCollection getCollectionOfDatabase(MongoDatabase database, String collectionName) {
+		collection = database.getCollection(collectionName);
 		return collection;
 	}
 
