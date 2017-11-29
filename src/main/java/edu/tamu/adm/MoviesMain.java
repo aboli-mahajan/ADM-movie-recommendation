@@ -1,7 +1,7 @@
 package edu.tamu.adm;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 
+import edu.tamu.adm.controller.MapReduce;
 import edu.tamu.adm.controller.RecommendMovies;
 import edu.tamu.adm.data.DBConnect;
 
@@ -10,15 +10,18 @@ public class MoviesMain {
 		//The main class handles function calls to all other classes.
 		//A new connection is made
 		DBConnect dbDataLoad = new DBConnect();
-		MongoDatabase db = dbDataLoad.createDBConnection();
+		dbDataLoad.createDBConnection();
 		@SuppressWarnings("rawtypes")
-		MongoCollection collection = dbDataLoad.getCollectionOfDatabase(db, "movies");
+		MongoCollection collection = dbDataLoad.getCollectionOfDatabase(dbDataLoad.database, "movies");
 		//Load Data 
 		dbDataLoad.WriteIntoMongo(collection);
 		//Read Data
 		dbDataLoad.ReadFromMongo(collection);
+		//Perform MapReduce to get avg rating of all movies
+		MapReduce mapReduce = new MapReduce();
+		mapReduce.performMapReduce(dbDataLoad, collection);
 		RecommendMovies recommendMovies = new RecommendMovies();
-		recommendMovies.getInputs(collection);	
+		recommendMovies.getInputs(dbDataLoad,collection);
 	}
 	
 }

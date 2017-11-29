@@ -5,9 +5,11 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bson.Document;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -20,7 +22,7 @@ public class DBConnect {
 	private static final String MOVIES = "movies";
 	private static final String SAMPLE_MOVIES_CSV = "data/movies_data.csv";
 	MongoClient mongoClient = null;
-	MongoDatabase database = null;
+	public MongoDatabase database = null;
 	MongoCollection<Document> collection;
 
 	// Connecting to MongoDB
@@ -86,10 +88,25 @@ public class DBConnect {
 	public void ReadFromMongo(MongoCollection collection) {
 		//Reading from the database
 		System.out.println("\nReading the movie titles and ratings for first 10 records:\n");
-		FindIterable<Document> iterator = collection.find().limit(10);
+		FindIterable<Document> iterator = collection.find().limit(20);
 		for (Document doc : iterator) {
 			System.out.println("Movie Title: " + doc.get("movieTitle") + "\t Rating: " + doc.get("rating"));
 		}
 		System.out.println("\nAll records read!\n");
+	}
+	
+	public void ReadUniqueMovies(Pattern regex) {
+		MongoCollection collection2 = getCollectionOfDatabase(database, "uniqueMovies");
+		BasicDBObject genreQuery = new BasicDBObject();
+		genreQuery.put("value.genres", regex);
+		FindIterable<Document> iterator = collection2.find(genreQuery).sort(new BasicDBObject("value.rating",-1)).limit(20);
+		
+		if(!iterator.iterator().hasNext()) {
+			System.out.println("Invalid Genre!!! Couldn't proceed the request!!!");
+		}
+
+		for (Document doc : iterator) {
+			System.out.println("Movie Title: " + doc.get("_id") + "\t Rating: "+ ((Document) doc.get("value")).get("rating") );
+		}
 	}
 }

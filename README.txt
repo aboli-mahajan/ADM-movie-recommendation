@@ -4,14 +4,24 @@ There are numerous movies available to entertain you. But deciding which movie t
 after a long day. So, in order to avoid the problem of deciding which one to watch, we tend to simply repeat our favorite
 ones. This problem is common to all of us. To make our lives a little easier, we have come up with a Movie Recommender!! 
 Would it not be great to have a system that will tell you what movies you could watch based on your preferences? Not only
-this, it will recommend you the movies of your favorite stars too! You may wonder what movies your friends are watching,
-and whether they are more interesting than the ones you are watching. No worries! Our system will link to your Facebook
-account and notify you of the movies that your friends have liked! Hurray!!
+this, it will recommend you the movies based on the types of movies you have watched previously as well! We have used movies
+previously rated by hundreds of users as a basis for our recommendation.
 
 
 ************************************************************************************************************************
 CHANGES
 ************************************************************************************************************************
+
+version 0.4
+Release Candidate
+- Modified the simple recommendation done using rating and movie release year.
+- Added a feature to enable users to rate new movies and update existing ratings.
+- Reduced code repetition by storing Map-Reduce output in a new collection.
+- Used MongoDB aggregation pipeline to group movies into a unique list.
+- Added input validations.
+- Performed error handling.
+- Minor bug fixes.
+
 
 version 0.3
 Beta Release
@@ -53,10 +63,10 @@ OTHER NOTES
 
 1. The database has a slight modification. We have added columns for username and email address and fixed columns that had incomplete values.
 
-2. You may try one of the email addresses - "Edwin.Frankel@gmail.com", "Crissy.Siemens@gmail.com" and "Kay.Kriner@gmail.com" for testing menu case 4.
+2. You may try one of the email addresses - "Cody.Almeda@gmail.com", "Edwin.Frankel@gmail.com", "Crissy.Siemens@gmail.com" and "Kay.Kriner@gmail.com" for testing menu case 4.
 
 R&D aspects
 - Developed a genre similarity and rating distance based algorithm for recommendation.
 - Wrote a test code to create a matrix of all movies and the genres they belong to.
-- Deferred using this matrix until the next release for finding similarities between the movies viewed by a user and the ones from the database.
+- Deferred using this matrix until future releases for finding similarities between the movies viewed by a user and the ones from the database.
 
