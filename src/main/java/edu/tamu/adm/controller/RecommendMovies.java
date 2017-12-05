@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Scanner;
 import com.mongodb.client.MongoCollection;
 import edu.tamu.adm.data.DBConnect;
-import edu.tamu.adm.utility.Utility;
 
 public class RecommendMovies {
 	
@@ -12,7 +11,7 @@ public class RecommendMovies {
 	public void getInputs (DBConnect dbDataLoad, MongoCollection collection) {
 		//Take user input for recommendation criteria
 		Scanner sc = new Scanner(System.in);
-		Utility ut = new Utility();
+		Service service = new Service();
 		float rating;
 		int year;
 		String genres;
@@ -21,15 +20,16 @@ public class RecommendMovies {
 		
 		while(option == true) {
 			System.out.println("\n\nMENU");
-			System.out.println("Enter recommendation field:");
-			System.out.println("1. Rating \n2. Release year \n3. Genres \n4. User's frequent genres \n5. Rate a movie \n6. Update a rating \n7. Exit");
+			System.out.println("Enter option:");
+			System.out.println("1. Recommend based on Rating \n2. Recommend based on Release year \n3. Recommend based on Genres \n4. Recommend using user's frequent genres \n5. Rate a movie \n6. Update a rating \n7. Exit");
 			int type = sc.nextInt();
 			rating = -1;
+			int count = 0;
 			year = 1900;
 			genres = "";
 			email = "";
 			
-			switch(type) {				
+			loop: switch(type) {				
 			case 1:
 				System.out.println("Enter a rating threshold greater than 0:");
 				try {
@@ -38,11 +38,23 @@ public class RecommendMovies {
 	                System.out.println("Input Mismatch Error! Could not proceed the request!!!");
 	            }
 				
-				while(rating < 0 || rating > 5) {
-					System.out.println("Please enter a value between 0-5 (both inclusive).");
-					rating = sc.nextFloat();
+				while(rating <= 0 || rating > 5) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
+					
+					try {
+						System.out.println("Enter a valid rating between 0 and 5");
+						rating = sc.nextFloat();
+					}catch (Exception e) {
+						System.out.println("Input Mismatch Error! Could not proceed the request!!!");
+					}
+					
 				}
-				ut.evaluateQuery(dbDataLoad, collection, rating, year, genres, email, type);
+				service.evaluateQuery(dbDataLoad, collection, rating, year, genres, email, type);
 				break;
 				
 			case 2:
@@ -54,6 +66,12 @@ public class RecommendMovies {
 	            }
 					
 				while(year <= 1900 || year > Calendar.getInstance().get(Calendar.YEAR)) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
 					System.out.println("Please enter a valid year between 1900 AND " + Calendar.getInstance().get(Calendar.YEAR));
 					sc.nextLine();
 					try {
@@ -62,7 +80,7 @@ public class RecommendMovies {
 		                System.out.println("Input Mismatch Error! Could not proceed the request!!!");
 		            }
 				} 
-				ut.evaluateQuery(dbDataLoad, collection, rating, year, genres, email, type);
+				service.evaluateQuery(dbDataLoad, collection, rating, year, genres, email, type);
 				break;
 				
 			case 3:
@@ -71,25 +89,42 @@ public class RecommendMovies {
 				sc.nextLine();
 				genres = sc.nextLine();
 				while(genres == "" || genres == null || genres.trim().length() == 0) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
 					System.out.println("Please enter a valid list of genres.");
 					genres = sc.nextLine();
 				}
 				while(!genres.matches("[a-zA-Z, ]*")) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
 					System.out.println("Please enter a valid list of comma separated genres.");
 					genres = sc.nextLine();
 				}
-				ut.evaluateQuery(dbDataLoad,collection, rating, year, genres, email, type);
+				service.evaluateQuery(dbDataLoad,collection, rating, year, genres, email, type);
 				break;
 				
 			case 4:
 				System.out.println("Enter email address:");
-				// TBD: verify existence of email
 				sc.nextLine();
 				email = sc.nextLine();
-				while(!ut.validateEmail(collection, email)) {
+				while(!service.validateEmail(collection, email)) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
 					email = sc.nextLine();
 				}
-				ut.evaluateQuery(dbDataLoad,collection, rating, year, genres, email, type);
+				service.evaluateQuery(dbDataLoad,collection, rating, year, genres, email, type);
 				break;
 				
 			case 5:
@@ -97,7 +132,13 @@ public class RecommendMovies {
 				System.out.println("Enter email address:");
 				sc.nextLine();
 				email = sc.nextLine();
-				while(!ut.validateEmail(collection, email)) {
+				while(!service.validateEmail(collection, email)) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
 					email = sc.nextLine();
 				}
 				System.out.println("Enter movie name:");
@@ -109,7 +150,7 @@ public class RecommendMovies {
 	                System.out.println("Input Mismatch Error! Could not proceed the request!!!");
 	            }
 				
-				ut.rateMovie(collection, movie, newRating, email, 1);
+				service.rateMovie(collection, movie, newRating, email, 1);
 				break;
 				
 			case 6:
@@ -117,7 +158,13 @@ public class RecommendMovies {
 				System.out.println("Enter email address:");
 				sc.nextLine();
 				email = sc.nextLine();
-				while(!ut.validateEmail(collection, email)) {
+				while(!service.validateEmail(collection, email)) {
+					count+=1;
+					if(count>2) {
+						count =0;
+						System.out.println("Max limit reached!! Could not proceed the request");
+						break loop;
+					}
 					email = sc.nextLine();
 				}
 				System.out.println("Enter movie name:");
@@ -129,10 +176,11 @@ public class RecommendMovies {
 	                System.out.println("Input Mismatch Error! Could not proceed the request!!!");
 	            }
 				
-				ut.rateMovie(collection, movie, updateRating, email, 2);
+				service.rateMovie(collection, movie, updateRating, email, 2);
 				break;
 				
 			case 7:
+				System.out.println("Thank you for using our recommendation engine!!!!");
 				option= false;
 				break;
 				

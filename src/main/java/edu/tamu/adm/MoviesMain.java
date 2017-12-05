@@ -17,11 +17,10 @@ public class MoviesMain {
 		dbDataLoad.WriteIntoMongo(collection);
 		//Read Data
 		dbDataLoad.ReadFromMongo(collection);
-		//Perform MapReduce to get avg rating of all movies
+		//Perform MapReduce to get average rating of all movies
 		MapReduce mapReduce = new MapReduce();
 		mapReduce.performMapReduce(dbDataLoad, collection);
 		RecommendMovies recommendMovies = new RecommendMovies();
 		recommendMovies.getInputs(dbDataLoad,collection);
-	}
-	
+	}	
 }
