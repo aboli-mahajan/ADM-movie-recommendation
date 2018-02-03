@@ -3,6 +3,7 @@ package edu.tamu.adm.data;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -15,6 +16,8 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import edu.tamu.adm.util.Utility;
+
 public class DBConnect {
 
 	private static final String BLANK = "";
@@ -24,6 +27,7 @@ public class DBConnect {
 	MongoClient mongoClient = null;
 	public MongoDatabase database = null;
 	MongoCollection<Document> collection;
+	
 
 	// Connecting to MongoDB
 	public MongoDatabase createDBConnection() {
@@ -87,26 +91,28 @@ public class DBConnect {
 
 	public void ReadFromMongo(MongoCollection collection) {
 		//Reading from the database
-		System.out.println("\nReading the movie titles and ratings for first 10 records:\n");
+		System.out.println("\nReading the movie titles and ratings for first 20 records:\n");
 		FindIterable<Document> iterator = collection.find().limit(20);
-		for (Document doc : iterator) {
-			System.out.println("Movie Title: " + doc.get("movieTitle") + "\t Rating: " + doc.get("rating"));
-		}
+		Utility.print(iterator, 1);
 		System.out.println("\nAll records read!\n");
 	}
 	
-	public void ReadUniqueMovies(Pattern regex) {
+	public void ReadUniqueMovies(Pattern regex, int prefer) {
 		MongoCollection collection2 = getCollectionOfDatabase(database, "uniqueMovies");
-		BasicDBObject genreQuery = new BasicDBObject();
-		genreQuery.put("value.genres", regex);
-		FindIterable<Document> iterator = collection2.find(genreQuery).sort(new BasicDBObject("value.rating",-1)).limit(20);
+		BasicDBObject Query = new BasicDBObject();
+		Query.put("value.genres", regex);
+		switch(prefer) {
+		case 1: 
+				Query.append("value.movieYear", new BasicDBObject("$lte", Calendar.getInstance().get(Calendar.YEAR)).append("$gt", Calendar.getInstance().get(Calendar.YEAR)-5));
+				break;
+		case 2: 
+				Query.append("value.movieYear", new BasicDBObject("$lt", 2000).append("$gte", 1900));
+				break;
+		default:
+				break;
+		}
 		
-		if(!iterator.iterator().hasNext()) {
-			System.out.println("Invalid Genre!!! Couldn't proceed the request!!!");
-		}
-
-		for (Document doc : iterator) {
-			System.out.println("Movie Title: " + doc.get("_id") + "\t Rating: "+ ((Document) doc.get("value")).get("rating") );
-		}
+		FindIterable<Document> iterator = collection2.find(Query).sort(new BasicDBObject("value.rating",-1).append("value.movieYear", -1)).limit(20);
+		Utility.print(iterator, 3);
 	}
 }

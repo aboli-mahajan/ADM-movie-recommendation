@@ -11,33 +11,47 @@ previously rated by hundreds of users as a basis for our recommendation.
 ************************************************************************************************************************
 CHANGES
 ************************************************************************************************************************
+version 0.5
+Final Release
+- Fully featured MongoDB movie recommendation engine that includes recommendation based on the following:
+a) Ratings of movies
+b) Release year of a movie
+c) Genres of movies with the choice of selecting latest or old movies
+d) User's most frequently viewed genres
+- Optimized code with error handling
+- Modified output formats for ease of comprehension
+- Added two levels in the menu to separate distinct functionality
+- Incorporated extra filter for allowing the user to view only latest movies while searching by genres
+- Minor bug fixes
+- Features of MongoDB used: Map reduce, aggregation, regular expression, MongoDB queries
+
 
 version 0.4
 Release Candidate
-- Modified the simple recommendation done using rating and movie release year.
-- Added a feature to enable users to rate new movies and update existing ratings.
-- Reduced code repetition by storing Map-Reduce output in a new collection.
-- Used MongoDB aggregation pipeline to group movies into a unique list.
-- Added input validations.
-- Performed error handling.
-- Minor bug fixes.
+- Modified the simple recommendation done using rating and movie release year
+- Added a feature to enable users to rate new movies and update existing ratings
+- Reduced code repetition by storing Map-Reduce output in a new collection
+- Used MongoDB aggregation pipeline to group movies into a unique list
+- Added input validations
+- Performed error handling
+- Minor bug fixes
 
 
 version 0.3
 Beta Release
-- Devised a Map-Reduce code to find average ratings of movies belonging to a set of input genres.
-- Evaluated a user's commonly reviewed movie genres. Used the most frequent genres as an input to the Map-Reduce function to find matching movies.
-- Added the option to run the recommendation system in a loop.
-- Further added a utility package for common code.
-- Limited the results to the top 20 records based on highest average rating in each case.
+- Devised a Map-Reduce code to find average ratings of movies belonging to a set of input genres
+- Evaluated a user's commonly reviewed movie genres. Used the most frequent genres as an input to the Map-Reduce function to find matching movies
+- Added the option to run the recommendation system in a loop
+- Further added a utility package for common code
+- Limited the results to the top 20 records based on highest average rating in each case
 - To do: error handling
 
 
 version 0.2
 Alpha Release
-- Completed a first pass implementation of the primary use case.
-- Implemented recommendation functions based on the rating and the release year of the movies through user input.
-- Modularized the code that handles database connectivity and read-write calls into a different class. Business logic is included in RecommendMovies.java. The main class i.e "MoviesMain.java" is responsible for calling the functions of different classes.
+- Completed a first pass implementation of the primary use case
+- Implemented recommendation functions based on the rating and the release year of the movies through user input
+- Modularized the code that handles database connectivity and read-write calls into a different class. Business logic is included in RecommendMovies.java. The main class i.e "MoviesMain.java" is responsible for calling the functions of different classes
 
 
 version 0.1
@@ -48,25 +62,27 @@ Proof of Architecture
 SETUP
 ************************************************************************************************************************
 
-1. Unzip the folder.
+1. Unzip the folder
 
-2. Navigate to the project folder called 'team3-project'.
+2. Navigate to the project folder called 'team3-project'
 
-3. If gradle exists, then run the command 'gradle run' in the command prompt.
+3. If gradle exists, then run the command 'gradle run' in the command prompt
 
-4. Otherwise run 'gradlew.bat' for Windows or './gradlew' for Linux systems and then run 'gradle run' command.
+4. Otherwise run 'gradlew.bat' for Windows or './gradlew' for Linux systems and then run 'gradle run' command
 
 
 ************************************************************************************************************************
 OTHER NOTES
 ************************************************************************************************************************
 
-1. The database has a slight modification. We have added columns for username and email address and fixed columns that had incomplete values.
+1. The database has a slight modification. We have added columns for username and email address and fixed columns that had incomplete values
 
-2. You may try one of the email addresses - "Cody.Almeda@gmail.com", "Edwin.Frankel@gmail.com", "Crissy.Siemens@gmail.com" and "Kay.Kriner@gmail.com" for testing menu case 4.
+2. You may try one of the email addresses - "Cody.Almeda@gmail.com", "Edwin.Frankel@gmail.com", "Crissy.Siemens@gmail.com" and "Kay.Kriner@gmail.com" for testing menu case 4
+
+3. Some movies to try out are: 'History Boys', 'Brokeback Mountain', 'Elizabethtown', 'Big Short'
+
 
 R&D aspects
-- Developed a genre similarity and rating distance based algorithm for recommendation.
-- Wrote a test code to create a matrix of all movies and the genres they belong to.
-- Deferred using this matrix until future releases for finding similarities between the movies viewed by a user and the ones from the database.
-
+- Developed a genre similarity and rating distance based algorithm for recommendation
+- Wrote a test code to create a matrix of all movies and the genres they belong to
+- Deferred using this matrix until future releases for finding similarities between the movies viewed by a user and the ones from the database

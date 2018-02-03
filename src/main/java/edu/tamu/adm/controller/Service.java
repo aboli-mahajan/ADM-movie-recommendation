@@ -18,7 +18,7 @@ import edu.tamu.adm.data.DBConnect;
 import edu.tamu.adm.util.Utility;
 
 public class Service {
-	 public void evaluateQuery(DBConnect dbconnect, MongoCollection<Document> collection, float rating, int year, String genres, String email, int type) {
+	 public void evaluateQuery(DBConnect dbconnect, MongoCollection<Document> collection, float rating, int year, String genres, String email, int type,int prefer) {
 			FindIterable<Document> cursor = null;
 			switch(type) {
 			case 1:
@@ -35,11 +35,7 @@ public class Service {
 					Aggregates.limit(20)
 					)
 				);
-				System.out.println("\n");
-				System.out.println("Displaying top 20 results as per ratings:");
-				for (Document doc: iterable) {
-					System.out.println("Movie Title: " + doc.get("_id") + "\t Rating: " + doc.get("rating"));
-				}	
+				Utility.print(iterable,type);
 				break;
 				
 			case 2:
@@ -49,11 +45,7 @@ public class Service {
 				yearQuery.put("value.movieYear", new BasicDBObject("$lte", year));
 				MongoCollection uniqueMovieCollection = dbconnect.getCollectionOfDatabase(dbconnect.database, "uniqueMovies");
 				cursor = uniqueMovieCollection.find(yearQuery).sort(new BasicDBObject("value.movieYear", -1)).limit(20);
-				System.out.println("\n");
-				System.out.println("Displaying top 20 results as per releasing year:");
-				for (Document doc: cursor) {
-					System.out.println("Movie Title: " + doc.get("_id") + "\t Release Year: " + ((Double) ((Document) doc.get("value")).get("movieYear")).intValue());
-				}
+				Utility.print(cursor, type);
 				break;
 				
 			case 3:
@@ -66,8 +58,7 @@ public class Service {
 		        }
 		        str += "(?=.*" + genreArray[genreArray.length-1].trim() + ")";
 		        Pattern regex = Pattern.compile(str, Pattern.CASE_INSENSITIVE);
-		        
-				dbconnect.ReadUniqueMovies(regex);
+				dbconnect.ReadUniqueMovies(regex,prefer);
 				break;
 				
 			case 4:
@@ -127,7 +118,7 @@ public class Service {
 	        }
 	        str += "(?=.*" + genreArray[genreArray.length-1].trim() + ")";
 	        Pattern regex = Pattern.compile(str, Pattern.CASE_INSENSITIVE);
-			dbconnect.ReadUniqueMovies(regex);	
+			dbconnect.ReadUniqueMovies(regex,0);	
 		}
 		
 		public void rateMovie(MongoCollection collection, String movie, Float rating, String email, int operation) {
@@ -218,4 +209,6 @@ public class Service {
 			}
 			return true;
 		}
+
+		
 }
